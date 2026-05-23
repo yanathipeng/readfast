@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GMAT Verbal Practice</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600&display=swap');
+
+:root {
+  --bg:      #f4f2ee;
+  --surface: #ffffff;
+  --border:  #c8c4bc;
+  --bordk:   #9e9a93;
+  --navy:    #1a2a4a;
+  --navylt:  #2c4270;
+  --red:     #c0392b;
+  --amber:   #b7600a;
+  --green:   #1e6b3c;
+  --text:    #1a1a1a;
+  --dim:     #555;
+  --muted:   #888;
+  --r:       3px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Source Sans 3', Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+header {
+  background: var(--navy);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+  height: 48px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.logo {
+  font-family: Georgia, serif;
+  font-size: 0.96rem;
+  letter-spacing: 0.04em;
+  color: #e8e4d8;
+}
+.logo em { font-style: normal; color: #6878a0; font-size: 0.77rem; margin-left: 8px; }
+
+/* ── WRAP ── */
+.wrap { max-width: 860px; margin: 0 auto; padding: 24px 28px 60px; }
+
+/* ── PANELS ── */
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* Setup / Active state flip */
+.state-setup  { display: block; }
+.state-active { display: none; }
+.is-active .state-setup  { display: none; }
+.is-active .state-active { display: block; }
+
+/* ── SHARED INPUT CARD ── */
+.input-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+.input-card textarea {
+  display: block; width: 100%;
+  background: var(--surface); border: none;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  font-family: Georgia, serif;
+  font-size: 0.92rem; line-height: 1.8;
+  padding: 16px 18px; resize: vertical;
+  outline: none; min-height: 170px;
+}
+.input-card textarea::placeholder {
+  color: #b0aca4;
+  font-family: 'Source Sans 3', sans-serif;
+  font-style: italic; font-size: 0.84rem;
+}
+.input-foot {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px; background: #fafaf8;
+}
+.wc { font-size: 0.7rem; color: var(--muted); }
+
+/* ── CTRL BAR ── */
+.ctrl-bar {
+  display: flex; align-items: center;
+  gap: 20px; flex-wrap: wrap;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: none;
+  padding: 10px 16px;
+}
+.ctrl { display: flex; align-items: center; gap: 10px; }
+.ctrl label {
+  font-size: 0.66rem; font-weight: 600;
+  letter-spacing: 0.09em; text-transform: uppercase;
+  color: var(--muted); white-space: nowrap;
+}
+.ctrl input[type="range"] { width: 110px; accent-color: var(--navy); cursor: pointer; }
+.ctrl-val { font-size: 0.78rem; font-weight: 600; color: var(--navy); min-width: 54px; }
+.ctrl-bar-actions { margin-left: auto; display: flex; gap: 8px; }
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-block; padding: 8px 20px;
+  font-family: 'Source Sans 3', Arial, sans-serif;
+  font-size: 0.74rem; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  cursor: pointer; border-radius: var(--r);
+  border: 1px solid transparent; transition: all 0.1s;
+}
+.btn-p { background: var(--navy); color: #fff; border-color: var(--navy); }
+.btn-p:hover { background: var(--navylt); }
+.btn-s { background: transparent; color: var(--navy); border-color: var(--bordk); }
+.btn-s:hover { border-color: var(--navy); background: rgba(26,42,74,0.04); }
+
+kbd {
+  background: #ece8e0; border: 1px solid var(--bordk);
+  border-radius: 2px; padding: 1px 5px;
+  font-size: 0.62rem; font-family: 'Source Sans 3', sans-serif;
+}
+
+/* Progress bar — shared */
+.rf-prog-track { height: 3px; background: #dedad2; }
+.rf-prog-fill { height: 100%; background: var(--navy); width: 0%; transition: width 0.1s linear; }
+
+/* Keyboard hints bar — shared */
+.rf-hints {
+  font-size: 0.61rem; color: var(--muted);
+  text-align: center; padding: 7px 16px;
+  border-top: 1px solid var(--border); background: #fafaf8;
+}
+
+/* ═══════════════════════════════════════
+   CHUNK-IN-CONTEXT
+═══════════════════════════════════════ */
+.ci-text-strip {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-bottom: none;
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px; gap: 12px;
+}
+.ci-text-strip span {
+  font-size: 0.72rem; color: var(--muted);
+  font-style: italic;
+  white-space: nowrap; overflow: hidden;
+  text-overflow: ellipsis; max-width: 72%;
+}
+.ci-topbar {
+  background: var(--navy); color: #6878a0;
+  display: flex; justify-content: space-between;
+  padding: 7px 16px;
+  font-size: 0.66rem; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+.ci-topbar b { color: #e8e4d8; }
+
+/* Passage: expands to full content height, page scrolls naturally */
+.ci-passage {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: none;
+  padding: 28px 32px;
+  font-family: Georgia, serif;
+  font-size: 0.93rem;
+  line-height: 2.2;
+  color: var(--text);
+  position: relative;
+}
+
+/* Every word: dimmed, with stable inline-block size to prevent reflow */
+.ci-word {
+  display: inline;
+  color: #8c8880;
+  transition: color 0.05s;
+}
+
+/* Active chunk: high contrast text + clear background — no padding to avoid reflow */
+.ci-word.active {
+  color: #111111;
+  background: rgba(200, 176, 48, 0.28);
+  border-radius: 2px;
+  /* Use box-shadow instead of padding so layout doesn't shift */
+  box-shadow: 0 0 0 2px rgba(200, 176, 48, 0.28);
+}
+
+/* Paragraph break marker */
+.ci-para-break {
+  display: block;
+  height: 0.55em;
+}
+
+.ci-btn-bar {
+  display: flex; gap: 8px;
+  justify-content: center; align-items: center;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-top: none;
+  background: var(--surface);
+}
+
+/* Settings bar — sits between text strip and passage display */
+.ci-settings-bar {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: none;
+  border-bottom: none;
+  padding: 10px 16px;
+}
+.ci-settings-ctrls {
+  display: flex; gap: 20px; flex-wrap: wrap; align-items: center;
+}
+/* ═══════════════════════════════════════
+   MOBILE — iPhone
+═══════════════════════════════════════ */
+@media (max-width: 600px) {
+
+  /* Tighter page padding */
+  .wrap { padding: 16px 14px 48px; }
+
+  /* Header */
+  header { padding: 0 16px; height: 44px; }
+  .logo { font-size: 0.88rem; }
+  .logo em { display: none; }
+
+  /* Input textarea — shorter on mobile, easier to type */
+  .input-card textarea { min-height: 120px; font-size: 0.88rem; padding: 12px 14px; }
+
+  /* Controls bar — stack vertically, full width sliders */
+  .ctrl-bar { gap: 14px; padding: 12px 14px; }
+  .ctrl { flex-wrap: wrap; gap: 8px; width: 100%; }
+  .ctrl label { width: 100%; }
+  .ctrl input[type="range"] { width: calc(100% - 80px); flex: 1; }
+  .ctrl-val { min-width: 48px; }
+  .ctrl-bar-actions { margin-left: 0; width: 100%; }
+  .ctrl-bar-actions .btn { width: 100%; text-align: center; padding: 12px; }
+
+  /* Buttons — minimum 44px tap target */
+  .btn { min-height: 44px; padding: 10px 16px; font-size: 0.78rem; }
+
+  /* CI text strip */
+  .ci-text-strip { padding: 10px 14px; }
+  .ci-text-strip span { font-size: 0.7rem; }
+
+  /* CI topbar */
+  .ci-topbar { padding: 8px 14px; font-size: 0.65rem; }
+
+  /* CI settings bar — stack controls vertically */
+  .ci-settings-bar { padding: 12px 14px; }
+  .ci-settings-ctrls { flex-direction: column; align-items: stretch; gap: 12px; }
+  .ci-settings-ctrls .ctrl { width: 100%; }
+  .ci-settings-ctrls input[type="range"] { width: 100%; }
+  .ci-settings-ctrls input[type="number"] {
+    width: 72px !important;
+    min-height: 36px;
+    font-size: 1rem !important;
+  }
+  .ci-settings-ctrls > div:last-child { width: 100%; }
+  .ci-settings-ctrls > div:last-child .btn { width: 100%; text-align: center; padding: 12px; }
+
+  /* Passage — tighter padding, slightly smaller text */
+  .ci-passage { padding: 18px 16px; font-size: 0.9rem; line-height: 2.0; }
+
+  /* Button bar — equal width buttons, tall tap targets */
+  .ci-btn-bar { gap: 6px; padding: 10px 14px; }
+  .ci-btn-bar .btn { flex: 1; text-align: center; padding: 12px 4px; font-size: 0.7rem; }
+
+  /* Keyboard hints — hide on mobile (no keyboard) */
+  .rf-hints { display: none; }
+
+  /* Word count footer */
+  .input-foot { padding: 8px 14px; }
+  .input-foot .btn { min-height: 40px; }
+
+}
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">GMAT Verbal <em>Read Fast</em></div>
+</header>
+
+<div class="wrap">
+
+  <div class="panel active" id="panel-ci">
+
+    <!-- ACTIVE state -->
+    <div class="state-active">
+      <div class="ci-text-strip">
+        <span id="ci-text-preview">—</span>
+        <button class="btn btn-s" style="font-size:0.68rem;padding:6px 14px;white-space:nowrap;" onclick="editText()">Edit text</button>
+      </div>
+      <!-- Settings directly below the collapsed text strip -->
+      <div class="ci-settings-bar">
+        <div class="ci-settings-ctrls">
+          <div class="ctrl">
+            <label>Speed</label>
+            <input type="range" id="ci-wpm-s" min="100" max="400" step="5" value="250"
+              oninput="document.getElementById('ci-wpm-n').value=this.value;">
+            <input type="number" id="ci-wpm-n" min="100" max="400" step="5" value="250"
+              oninput="let v=Math.max(100,Math.min(400,+this.value||250));this.value=v;document.getElementById('ci-wpm-s').value=v;"
+              style="width:62px;padding:4px 6px;border:1px solid var(--border);border-radius:var(--r);font-family:'Source Sans 3',sans-serif;font-size:0.78rem;font-weight:600;color:var(--navy);background:#fafaf8;outline:none;">
+            <span style="font-size:0.72rem;color:var(--muted);">WPM</span>
+          </div>
+          <div class="ctrl">
+            <label>Chunk</label>
+            <input type="range" id="ci-chunk-s" min="1" max="5" step="1" value="3"
+              oninput="document.getElementById('ci-chunk-v').textContent=this.value+(+this.value>1?' words':' word');">
+            <span class="ctrl-val" id="ci-chunk-v">3 words</span>
+          </div>
+          <div style="margin-left:auto;">
+            <button class="btn btn-s" style="font-size:0.72rem;" onclick="restartCI()">Apply &amp; restart →</button>
+          </div>
+        </div>
+      </div>
+      <!-- Status + progress + passage below -->
+      <div class="ci-topbar">
+        <span><b id="ci-ctr">— / —</b></span>
+        <span><b id="ci-wpm-live">—</b> WPM</span>
+        <span><b id="ci-tleft">—</b></span>
+      </div>
+      <div class="rf-prog-track"><div class="rf-prog-fill" id="ci-prog"></div></div>
+      <div class="ci-passage" id="ci-passage"></div>
+      <div class="ci-btn-bar">
+        <button class="btn btn-s" onclick="ciSkipBack()">← −10</button>
+        <button class="btn btn-p" id="ci-pb" onclick="toggleCI()">Pause</button>
+        <button class="btn btn-s" onclick="ciSkipForward()">+10 →</button>
+      </div>
+      <div class="rf-hints">
+        <kbd>Space</kbd> pause &nbsp;·&nbsp; <kbd>←</kbd> <kbd>→</kbd> skip ±10
+      </div>
+    </div>
+
+    <!-- SETUP state -->
+    <div class="state-setup">
+      <div class="input-card">
+        <textarea id="ci-text" rows="8" placeholder="Paste your RC passage here…"></textarea>
+        <div class="input-foot">
+          <span class="wc" id="ci-wc">0 words</span>
+        </div>
+      </div>
+      <div class="ctrl-bar">
+        <div class="ctrl">
+          <label>Speed</label>
+          <input type="range" id="ci-wpm-s-setup" min="100" max="400" step="5" value="250"
+            oninput="document.getElementById('ci-wpm-n-setup').value=this.value;">
+          <input type="number" id="ci-wpm-n-setup" min="100" max="400" step="5" value="250"
+            oninput="let v=Math.max(100,Math.min(400,+this.value||250));this.value=v;document.getElementById('ci-wpm-s-setup').value=v;"
+            style="width:62px;padding:4px 6px;border:1px solid var(--border);border-radius:var(--r);font-family:'Source Sans 3',sans-serif;font-size:0.78rem;font-weight:600;color:var(--navy);background:#fafaf8;outline:none;">
+          <span style="font-size:0.72rem;color:var(--muted);">WPM</span>
+        </div>
+        <div class="ctrl">
+          <label>Chunk</label>
+          <input type="range" id="ci-chunk-s-setup" min="1" max="5" step="1" value="3"
+            oninput="document.getElementById('ci-chunk-v-setup').textContent=this.value+(+this.value>1?' words':' word');">
+          <span class="ctrl-val" id="ci-chunk-v-setup">3 words</span>
+        </div>
+        <div class="ctrl-bar-actions">
+          <button class="btn btn-p" onclick="startCI()">Start reading →</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div><!-- /wrap -->
+
+<script>
+// ── WORD COUNT ──
+document.getElementById('ci-text').addEventListener('input', function() {
+  const w = this.value.trim() ? this.value.trim().split(/\s+/).length : 0;
+  document.getElementById('ci-wc').textContent = w + ' words';
+});
+
+// ═══════════════════════════════════════
+// CHUNK-IN-CONTEXT ENGINE
+// ═══════════════════════════════════════
+let ciWordEls  = [],
+    ciChunks   = [],
+    ciChunkIdx = 0,
+    ciTimer    = null,
+    ciOn       = false,
+    ciWPM      = 250,
+    ciLastText = '';
+
+function tokenisePara(para) {
+  return para
+    .split(/[\s\u2013\u2014]+/)
+    .map(t => t.replace(/^[-–—]+|[-–—]+$/g, ''))
+    .filter(Boolean);
+}
+
+function buildCIPassage(text) {
+  const container = document.getElementById('ci-passage');
+  container.innerHTML = '';
+  ciWordEls = [];
+  const paragraphs = text.split(/\n\s*\n/);
+  paragraphs.forEach((para, pIdx) => {
+    if (pIdx > 0) {
+      const br = document.createElement('span');
+      br.className = 'ci-para-break';
+      container.appendChild(br);
+    }
+    const words = tokenisePara(para);
+    words.forEach((word, i) => {
+      if (i > 0) container.appendChild(document.createTextNode(' '));
+      const span = document.createElement('span');
+      span.className = 'ci-word';
+      span.dataset.idx = ciWordEls.length;
+      span.textContent = word;
+      ciWordEls.push(span);
+      container.appendChild(span);
+    });
+  });
+}
+
+function buildCIChunks(text, sz) {
+  const out = [];
+  const paragraphs = text.split(/\n\s*\n/);
+  let wordIdx = 0;
+  paragraphs.forEach(para => {
+    const words = tokenisePara(para);
+    for (let i = 0; i < words.length; i += sz) {
+      out.push({ start: wordIdx + i, end: Math.min(wordIdx + i + sz, wordIdx + words.length) });
+    }
+    wordIdx += words.length;
+  });
+  return out;
+}
+
+function applyChunk(idx) {
+  ciWordEls.forEach(el => el.classList.remove('active'));
+  if (idx >= ciChunks.length) return;
+  const { start, end } = ciChunks[idx];
+  for (let i = start; i < end && i < ciWordEls.length; i++) {
+    ciWordEls[i].classList.add('active');
+  }
+}
+
+function ciMeta() {
+  const sz  = parseInt(document.getElementById('ci-chunk-s').value);
+  const rem = ciChunks.length - ciChunkIdx;
+  const sec = Math.ceil(rem * (60 / ciWPM) * sz);
+  document.getElementById('ci-ctr').textContent =
+    `${Math.min(ciChunkIdx + 1, ciChunks.length)} / ${ciChunks.length}`;
+  document.getElementById('ci-wpm-live').textContent = ciWPM;
+  document.getElementById('ci-tleft').textContent =
+    `${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')} left`;
+  document.getElementById('ci-prog').style.width =
+    `${(ciChunkIdx / ciChunks.length) * 100}%`;
+}
+
+function startCITick() {
+  const sz = parseInt(document.getElementById('ci-chunk-s').value);
+  const ms = (60 / ciWPM) * 1000 * sz;
+  ciTimer = setInterval(() => {
+    if (ciChunkIdx >= ciChunks.length) {
+      clearInterval(ciTimer); ciOn = false;
+      ciWordEls.forEach(el => el.classList.remove('active'));
+      document.getElementById('ci-prog').style.width = '100%';
+      document.getElementById('ci-pb').textContent = 'Done';
+      document.getElementById('ci-tleft').textContent = 'Complete';
+      return;
+    }
+    applyChunk(ciChunkIdx); ciMeta(); ciChunkIdx++;
+  }, ms);
+}
+
+// Read WPM + chunk from whichever set of controls is visible
+function getSettings() {
+  const isActive = document.getElementById('panel-ci').classList.contains('is-active');
+  const wpmId   = isActive ? 'ci-wpm-s'       : 'ci-wpm-s-setup';
+  const chunkId = isActive ? 'ci-chunk-s'      : 'ci-chunk-s-setup';
+  return {
+    wpm:   parseInt(document.getElementById(wpmId).value)   || 250,
+    chunk: parseInt(document.getElementById(chunkId).value) || 3
+  };
+}
+
+function startCI() {
+  const text = document.getElementById('ci-text').value.trim();
+  if (!text) { alert('Paste some text first.'); return; }
+  const { wpm, chunk } = getSettings();
+  ciWPM = wpm; ciLastText = text;
+  ciChunkIdx = 0; ciOn = true;
+  buildCIPassage(text);
+  ciChunks = buildCIChunks(text, chunk);
+  document.getElementById('ci-text-preview').textContent =
+    text.slice(0, 80) + (text.length > 80 ? '…' : '');
+  // Sync setup values into active controls
+  document.getElementById('ci-wpm-s').value   = wpm;
+  document.getElementById('ci-wpm-n').value   = wpm;
+  document.getElementById('ci-chunk-s').value = chunk;
+  document.getElementById('ci-chunk-v').textContent = chunk + (chunk > 1 ? ' words' : ' word');
+  document.getElementById('panel-ci').classList.add('is-active');
+  document.getElementById('ci-pb').textContent = 'Pause';
+  document.getElementById('ci-prog').style.width = '0%';
+  ciMeta(); startCITick();
+  document.addEventListener('keydown', ciKey);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function editText() {
+  // Return to setup — text preserved, session cleared
+  clearInterval(ciTimer); ciOn = false; ciChunkIdx = 0;
+  document.getElementById('panel-ci').classList.remove('is-active');
+  document.getElementById('ci-pb').textContent = 'Pause';
+  document.getElementById('ci-prog').style.width = '0%';
+  document.getElementById('ci-ctr').textContent = '— / —';
+  document.getElementById('ci-wpm-live').textContent = '—';
+  document.getElementById('ci-tleft').textContent = '—';
+  document.removeEventListener('keydown', ciKey);
+}
+
+function toggleCI() {
+  if (ciOn) {
+    clearInterval(ciTimer); ciOn = false;
+    document.getElementById('ci-pb').textContent = 'Resume';
+  } else {
+    ciOn = true;
+    document.getElementById('ci-pb').textContent = 'Pause';
+    startCITick();
+  }
+}
+
+function ciSkipBack() {
+  ciChunkIdx = Math.max(0, ciChunkIdx - 10);
+  applyChunk(ciChunkIdx); ciMeta();
+}
+function ciSkipForward() {
+  ciChunkIdx = Math.min(ciChunks.length - 1, ciChunkIdx + 10);
+  applyChunk(ciChunkIdx); ciMeta();
+}
+
+function restartCI() {
+  // Read current active settings — applied on restart
+  clearInterval(ciTimer);
+  const wpm   = parseInt(document.getElementById('ci-wpm-s').value)   || 250;
+  const chunk = parseInt(document.getElementById('ci-chunk-s').value) || 3;
+  ciWPM = wpm; ciChunkIdx = 0; ciOn = true;
+  buildCIPassage(ciLastText);
+  ciChunks = buildCIChunks(ciLastText, chunk);
+  document.getElementById('ci-wpm-live').textContent = ciWPM;
+  document.getElementById('ci-chunk-v').textContent = chunk + (chunk > 1 ? ' words' : ' word');
+  document.getElementById('ci-pb').textContent = 'Pause';
+  document.getElementById('ci-prog').style.width = '0%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  ciMeta(); startCITick();
+}
+
+function ciKey(e) {
+  if (['INPUT','TEXTAREA'].includes(e.target.tagName)) return;
+  if (e.code==='Space'){e.preventDefault();toggleCI();}
+  if (e.code==='KeyR'){e.preventDefault();restartCI();}
+  if (e.code==='ArrowLeft') ciSkipBack();
+  if (e.code==='ArrowRight') ciSkipForward();
+}
+</script>
+</body>
+</html>
